@@ -26,9 +26,18 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: nightly-2022-04-24
+          toolchain: nightly-2022-05-15
           components: rustfmt
           target: wasm32-unknown-unknown
+          default: true
+
+      - name: Install toolchain x86
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: nightly-2022-05-15
+          components: rustfmt
+          target: x86_64-unknown-linux-gnun
           default: true
 
       - name: Cache restore
@@ -60,4 +69,3 @@ jobs:
       - name: Cargo build release
         run: |
           cargo build --release
-
