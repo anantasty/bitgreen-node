@@ -1,3 +1,6 @@
+# Using sccache guidance from
+# https://www.infinyon.com/blog/2021/04/github-actions-best-practices/
+
 name: Ci-test-and-build
 on:
   push:
@@ -26,25 +29,21 @@ jobs:
       cancel-in-progress: true
     steps:
       - name: Install sccache (ubuntu-latest)
-        env:
-          LINK: https://github.com/mozilla/sccache/releases/download
-          SCCACHE_VERSION: 0.3.0
         run: |
-          SCCACHE_FILE=sccache-dist-v0.3.0-x86_64-unknown-linux-musl
           mkdir -p $HOME/.local/bin
-          curl -L "https://github.com/mozilla/sccache/releases/download/v0.3.0/sccache-dist-v0.3.0-x86_64-unknown-linux-musl.tar.gz" | tar xz
-          mv -f $SCCACHE_FILE/sccache $HOME/.local/bin/sccache
+          wget https://github.com/mozilla/sccache/releases/download/v0.3.0/sccache-v0.3.0-x86_64-unknown-linux-musl.tar.gz && tar -xvf sccache-v0.3.0-x86_64-unknown-linux-musl.tar.gz
+          mv -f sccache-v0.3.0-x86_64-unknown-linux-musl/sccache $HOME/.local/bin/sccache && chmod +x  $HOME/.local/bin/sccache 
           echo "$HOME/.local/bin" >> $GITHUB_PATH    
       - name: Save sccache
         uses: actions/cache@v3
         continue-on-error: false
         with:
-          path: ${{ matrix.sccache-path }}
+          path: /home/runner/.cache/sccache
           key: ${{ runner.os }}-sccache-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
                         ${{ runner.os }}-sccache-           
       - name: Start sccache server
-        run: sccache --start-server                             
+        run: $HOME/.local/bin/sccache --start-server                             
       - uses: actions/cache@v3
         with:
           path: |
@@ -114,19 +113,19 @@ jobs:
         run: |
           SCCACHE_FILE=sccache-dist-v0.3.0-x86_64-unknown-linux-musl
           mkdir -p $HOME/.local/bin
-          curl -L "https://github.com/mozilla/sccache/releases/download/v0.3.0/sccache-dist-v0.3.0-x86_64-unknown-linux-musl.tar.gz" | tar xz
-          mv -f $SCCACHE_FILE/sccache $HOME/.local/bin/sccache
+          wget https://github.com/mozilla/sccache/releases/download/v0.3.0/sccache-v0.3.0-x86_64-unknown-linux-musl.tar.gz && tar -xvf sccache-v0.3.0-x86_64-unknown-linux-musl.tar.gz
+          mv -f sccache-v0.3.0-x86_64-unknown-linux-musl/sccache $HOME/.local/bin/sccache && chmod +x  $HOME/.local/bin/sccache 
           echo "$HOME/.local/bin" >> $GITHUB_PATH    
       - name: Save sccache
         uses: actions/cache@v3
         continue-on-error: false
         with:
-          path: ${{ matrix.sccache-path }}
+          path: /home/runner/.cache/sccache
           key: ${{ runner.os }}-sccache-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
                         ${{ runner.os }}-sccache-           
       - name: Start sccache server
-        run: sccache --start-server                             
+        run: $HOME/.local/bin/sccache --start-server                             
       - uses: actions/cache@v3
         with:
           path: |
@@ -195,19 +194,19 @@ jobs:
         run: |
           SCCACHE_FILE=sccache-dist-v0.3.0-x86_64-unknown-linux-musl
           mkdir -p $HOME/.local/bin
-          curl -L "https://github.com/mozilla/sccache/releases/download/v0.3.0/sccache-dist-v0.3.0-x86_64-unknown-linux-musl.tar.gz" | tar xz
-          mv -f $SCCACHE_FILE/sccache $HOME/.local/bin/sccache
+          wget https://github.com/mozilla/sccache/releases/download/v0.3.0/sccache-v0.3.0-x86_64-unknown-linux-musl.tar.gz && tar -xvf sccache-v0.3.0-x86_64-unknown-linux-musl.tar.gz
+          mv -f sccache-v0.3.0-x86_64-unknown-linux-musl/sccache $HOME/.local/bin/sccache && chmod +x  $HOME/.local/bin/sccache 
           echo "$HOME/.local/bin" >> $GITHUB_PATH    
       - name: Save sccache
         uses: actions/cache@v3
         continue-on-error: false
         with:
-          path: ${{ matrix.sccache-path }}
+          path: /home/runner/.cache/sccache
           key: ${{ runner.os }}-sccache-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
                         ${{ runner.os }}-sccache-           
       - name: Start sccache server
-        run: sccache --start-server                             
+        run: $HOME/.local/bin/sccache --start-server                             
       - uses: actions/cache@v3
         with:
           path: |
@@ -313,22 +312,22 @@ jobs:
         run: |
           SCCACHE_FILE=sccache-dist-v0.3.0-x86_64-unknown-linux-musl
           mkdir -p $HOME/.local/bin
-          curl -L "https://github.com/mozilla/sccache/releases/download/v0.3.0/sccache-dist-v0.3.0-x86_64-unknown-linux-musl.tar.gz" | tar xz 
-          wget https://github.com/mozilla/sccache/releases/download/v0.3.0/sccache-dist-v0.3.0-x86_64-unknown-linux-musl.tar.gz && tar -xvf $SCACHE_FILE
+          wget https://github.com/mozilla/sccache/releases/download/v0.3.0/sccache-v0.3.0-x86_64-unknown-linux-musl.tar.gz && tar -xvf sccache-v0.3.0-x86_64-unknown-linux-musl.tar.gz
+          mv -f sccache-v0.3.0-x86_64-unknown-linux-musl/sccache $HOME/.local/bin/sccache && chmod +x  $HOME/.local/bin/sccache 
           echo "DIR LISTx"
           ls -alh
-          mv -f $SCCACHE_FILE/sccache $HOME/.local/bin/sccache
+          mv -f $SCCACHE_FILE/sccache-dist $HOME/.local/bin/sccache && chmod +x  $HOME/.local/bin/sccache 
           echo "$HOME/.local/bin" >> $GITHUB_PATH    
       - name: Save sccache
         uses: actions/cache@v3
         continue-on-error: false
         with:
-          path: ${{ matrix.sccache-path }}
+          path: /home/runner/.cache/sccache
           key: ${{ runner.os }}-sccache-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
                         ${{ runner.os }}-sccache-           
       - name: Start sccache server
-        run: sccache --start-server                             
+        run: $HOME/.local/bin/sccache --start-server                             
       - uses: actions/cache@v3
         with:
           path: |
@@ -515,3 +514,27 @@ jobs:
           username: ${{ secrets.SSH_USER}}
           key: ${{ secrets.SSH_PRIV }}
           script: ls ~/conf &&  cp /root/conf/rococo-local-cfde.json ~/ && supervisorctl reload
+      
+  terraform:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.head_ref || github.run_id }}-deploy
+      cancel-in-progress: true
+    needs: []
+    steps:            
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: terraform hetzner
+        uses: dflook/terraform-apply@v1
+        with:
+          path: /home/runner/work/bitgreen-node/bitgreen-node/scripts/terraform
+          auto_approve: true
+          variables: |
+            hcloud_token = "${{ secrets.HETZNER_KEY }}"
+            pubkey = <<EOT
+            ${{ secrets.KUBERNETES_PUB }}
+            EOT
+            privatekey = <<EOT
+            ${{ secrets.KUBERNETES_PRIV }}
+            EOT
+
